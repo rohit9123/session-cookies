@@ -12,12 +12,12 @@ const bodyParser=require('body-parser');
 
 
 
-mongoose_uri="mongodb+srv://Rohit:EQ1hXC0hC2rGyXFH@cluster0.ywnv8.mongodb.net/test";
-mongoose.connect(mongoose_uri,{useNewUrlParser:true,useUnifiedTopology:true});
+//using env to safe our database information from outside
+mongoose.connect(process.env.mongoose_uri,{useNewUrlParser:true,useUnifiedTopology:true});
 
 //using store to save the cookie in database
 const store=new MongoDBsession({
-    uri:mongoose_uri,
+    uri:process.env.mongoose_uri,
     collection:'mysession',
 })
 app.set('view engine','ejs');
