@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            height: 300px;
+            width: 300px;
+        }
+        img {
+            size: 100px 100px;
+        }
+    </style>
+</head>
+<body>
+    <!-- <div><a href="/photo/<%=photo._id%>">deletephoto</a></div> -->
+    <div>
+    <img src="/<%=photo.photo%>">
+    <p><%=photo.desc%></p>
+    </div>
+    <form method="POST" action="/photo/<%=photo._id%>">
+    <button>submit</button>
+    </form>
+</body>
