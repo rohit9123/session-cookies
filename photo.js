@@ -47,7 +47,13 @@ router.get('/photo/:show/down',async (req,res)=>{
     console.log(photos);
     const name=(photos.photo.toString());
     const filename=name.split('/')[1];
-    const downpath=path.join('photo',filename)
+    const downpath=path.join('photo',filename);
+
+
+    //this is for giving extension
+    res.setHeader('Content-Type','application/jpg');
+    res.setHeader('Content-Disposition','inline; filename="'+filename+'"')
+    //this is for giving extension
     fs.readFile(downpath,(err,data)=>{
         if(err){
             return (err);
