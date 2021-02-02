@@ -61,6 +61,9 @@ const fileFilter = (req,file,cb)=>{
 }
 
 app.use(bodyParser.urlencoded({extended:true}))
+
+
+//the name of form file is have the name under the single
 app.use(multer({storage:filestorage}).single('photo'))
 app.use('/photo',express.static(path.join(__dirname,'photo')));
 

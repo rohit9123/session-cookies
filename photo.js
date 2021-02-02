@@ -7,14 +7,16 @@ const {body,validationResult}=require("express-validator");
 const User=require('./model/user'); 
 const Photo=require('./model/photo');
 const { findById } = require('./model/user');
+const e = require('express');
 // const e = require('express');
 ObjectID = require("mongodb").ObjectID 
 
-router.get('/add',(req,res)=>{
-    if(req.session.isLoggedIn)
+
+router.get('/add',islogin,(req,res)=>{
+    // if(req.session.isLoggedIn)
     res.render('add');
-    else
-    res.redirect('/login');
+    // else
+    // res.redirect('/login');
 })
 
 router.post('/add',body('desc').isString().isLength({min:10}),async(req,res)=>{
@@ -107,6 +109,14 @@ router.post('/photo/:delete',async(req,res)=>{
     res.redirect('/');
 })
 
+function islogin(req,res,next){
+     if(req.session.isLoggedIn){
+         next();
+         
+     }else{
+     res.redirect('/login');
+    }
+}
 
 
 module.exports=router;
