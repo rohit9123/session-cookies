@@ -1,9 +1,12 @@
 const express=require('express');
 const router=express.Router();
 const mongoose=require("mongoose");
+const fs=require('fs');
+const path=require('path');
 const {body,validationResult}=require("express-validator");
 const User=require('./model/user'); 
 const Photo=require('./model/photo');
+const { findById } = require('./model/user');
 // const e = require('express');
 ObjectID = require("mongodb").ObjectID 
 
@@ -31,6 +34,31 @@ router.post('/add',body('desc').isString().isLength({min:10}),async(req,res)=>{
     console.log()}
     res.redirect('/');
 })
+
+
+
+//downloading a file
+
+
+
+router.get('/photo/:show/down',async (req,res)=>{
+    const _id=req.params.show;
+     const photos=await Photo.findById(_id);
+    console.log(photos);
+    const name=(photos.photo.toString());
+    const filename=name.split('/')[1];
+    const downpath=path.join('photo',filename)
+    fs.readFile(downpath,(err,data)=>{
+        if(err){
+            return (err);
+        }
+        else res.send(data);
+    })
+
+})
+
+
+
 router.get('/photo/:show',(req,res)=>{
     let _id=mongoose.Types.ObjectId.createFromHexString(req.params.show);
     console.log(req.session.isLoggedIn)
@@ -72,5 +100,7 @@ router.post('/photo/:delete',async(req,res)=>{
 
     res.redirect('/');
 })
+
+
 
 module.exports=router;
