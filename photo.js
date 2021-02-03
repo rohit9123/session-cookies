@@ -12,6 +12,12 @@ const e = require('express');
 ObjectID = require("mongodb").ObjectID 
 
 
+//this is for deleting a file from file system
+const deletefile=(imageurl)=>{
+    fs.unlink(imageurl,(err)=>{
+        console.log(err);
+    })
+}
 router.get('/add',islogin,(req,res)=>{
     // if(req.session.isLoggedIn)
     res.render('add');
@@ -51,17 +57,25 @@ router.get('/photo/:show/down',async (req,res)=>{
     const filename=name.split('/')[1];
     const downpath=path.join('photo',filename);
 
+    //we are reading file in chunks and send them with pipe
+    const file=fs.createReadStream(downpath);
 
     //this is for giving extension
     res.setHeader('Content-Type','application/jpg');
     res.setHeader('Content-Disposition','inline; filename="'+filename+'"')
     //this is for giving extension
-    fs.readFile(downpath,(err,data)=>{
-        if(err){
-            return (err);
-        }
-        else res.send(data);
-    })
+    file.pipe(res);
+
+    // this is also right but for like video we cant use this
+    //because it will collect all data then send so the other
+    // thing which we can use is stream 
+
+     // fs.readFile(downpath,(err,data)=>{
+    //     if(err){
+    //         return (err);
+    //     }
+    //     else res.send(data);
+    // })
 
 })
 
@@ -82,6 +96,9 @@ router.get('/photo/:show',(req,res)=>{
     else
     res.redirect('/login');
 })
+
+
+
 router.post('/photo/:delete',async(req,res)=>{
     console.log('g');
     // let _id=mongoose.Types.ObjectId.createFromHexString(req.params.show);
@@ -93,6 +110,12 @@ router.post('/photo/:delete',async(req,res)=>{
         let photuser=photo.user;
         if(req.session.isLoggedIn){
        if(photo.user.equals(req.session.user._id)){
+
+        //deleting a photo from our filesystem and deleting also information
+        const name=(photo.photo.toString());
+        const filename=name.split('/')[1];
+        const downpath=path.join('photo',filename);
+        deletefile(downpath)
            await Photo.findOneAndDelete({_id:_id},(err,found)=>{
                if(err){
                    console.log(err);  
