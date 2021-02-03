@@ -67,7 +67,14 @@ app.use(bodyParser.urlencoded({extended:true}))
 app.use(multer({storage:filestorage}).single('photo'))
 app.use('/photo',express.static(path.join(__dirname,'photo')));
 
-
+function islogin(req,res,next){
+    if(req.session.isLoggedIn){
+        next();
+        
+    }else{
+    res.redirect('/login');
+   }
+}
 app.get('/',(req,res)=>{
     let ans=Photo.find({},(err,photos)=>{
         if(err){
