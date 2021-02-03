@@ -39,7 +39,7 @@ app.use(session({
     resave:false,
     saveUninitialized:false,
     store:store,
-    maxage:3600000
+    maxage:36000
 }))
 
 
