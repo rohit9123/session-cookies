@@ -61,28 +61,36 @@ const fileFilter = (req,file,cb)=>{
 }
 
 app.use(bodyParser.urlencoded({extended:true}))
-
+const productPerPage=2;
 
 //the name of form file is have the name under the single
 app.use(multer({storage:filestorage}).single('photo'))
 app.use('/photo',express.static(path.join(__dirname,'photo')));
 
-function islogin(req,res,next){
-    if(req.session.isLoggedIn){
-        next();
+
+app.get('/',async(req,res)=>{
+    const page= parseInt(req.query.page)||1;
+    let totalitem;
+    console.log(typeof(page));
+    Photo.count().then(numphoto=>{
+        totalitem=numphoto;
+        return Photo.find()
+        .skip((page-1)*productPerPage)
+        .limit(productPerPage)
+    })
+   .then(photo=>{
+       res.render('home',{
+        photos:photo,
+        totalitem:totalitem,
+        hasNextPage:productPerPage*page < totalitem,
+        hasPreviousPage:page>1,
+        lastPage: Math.ceil(totalitem/productPerPage),
+        nextPage:page+1,
+        previousPage:page-1,
+        currentPage:page
         
-    }else{
-    res.redirect('/login');
-   }
-}
-app.get('/',(req,res)=>{
-    let ans=Photo.find({},(err,photos)=>{
-        if(err){
-            res.send('hlw')
-        }else{
-            res.render('home',{photos:photos})
-        }
     });
+   })
     
 });
 

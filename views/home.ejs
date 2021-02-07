@@ -41,6 +41,26 @@ padding: 15px 10px;
     padding-left: 20%;
     padding-top: 15%;
 }
+.pagination{
+    text-align: center;
+    padding: 0.5rem;
+    flex:auto;
+}
+.pagination a{
+    color: #000;
+    text-decoration: none;
+    padding: 0.5rem 0.5rem;
+    border: solid 1px rgb(22, 197, 153);
+
+}
+.pagination a{
+    /* padding-right:; */
+    margin: 0.6rem 0.5rem;
+}
+.pagination a:hover{
+    background: black;
+    color: springgreen;
+}
 </style>
 
 </head>
@@ -55,5 +75,12 @@ padding: 15px 10px;
 <!-- </div> -->
 
 <% }%>
+<div class="pagination">
+    <%  if(currentPage !=1&& previousPage!=1){%> <a href="?page=1">1</a><% }%>
+    <% if(previousPage){%> <a href="?page=<%=previousPage%>"><%=previousPage%></a><%}%>
+    <a href="?page=<%=currentPage%>"><%=currentPage%></a>
+    <% if(hasNextPage){%> <a href="?page=<%=nextPage%>"><%=nextPage%></a> <%}%>
+
+</div>
 </div>
 </div>
